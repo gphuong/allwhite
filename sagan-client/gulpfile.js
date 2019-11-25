@@ -7,17 +7,17 @@ var paths = {
     css: {
         files: ['src/css/*.css']
     },
-    external_css: [
+    external_css:[
         'src/jspm_packages/npm/eonasdan-bootstrap-datetimepicker@4.15.35/build/css/bootstrap-datetimepicker.min.css',
         'src/jspm_packages/github/twbs/bootstrap@2.3.2/docs/assets/css/bootstrap.css',
         'src/jspm_packages/github/FortAwesome/font-awesome@3.2.1/css/font-awesome.min.css'
     ],
     assets: ['src/img*/**', 'src/*.txt', 'src/*.html', 'src/font*/**', 'src/css*/filterable-list.css',
         'src/config.js', 'src/jspm_packages*/system*', 'src/jspm_packages*/**/*.ttf', 'src/jspm_packages*/**/*.woff'],
-    dest: './build/dist'
+    dest: './build/dist/'
 };
 
-gulp.task('minify-css', function () {
+gulp.task('minify-css', function(){
     return gulp.src(paths.css.files)
         .pipe(cssmin({}))
         .pipe(gulp.dest(paths.dest + 'css'));
@@ -39,14 +39,13 @@ gulp.task('jspm', function () {
             minify: true,
             mangle: true
         },
-        bundle:[
+        bundles: [
             {src: 'app/main', dst: 'main.js'},
-            {src: 'app/maps', dst:'maps.js'},
+            {src: 'app/maps', dst: 'maps.js'},
             {src: 'app/admin', dst: 'admin.js'},
-            {src: 'app/pages/projects/show', dst: 'pages/project/show.js'}
+            {src: 'app/pages/projects/show', dst: 'pages/projects/show.js'}
         ]
-    })
-        .pipe(gulp.dest(paths.dest + "app"));
+    }).pipe(gulp.dest(paths.dest + "app"));
 });
 
 gulp.task('build', ['minify-css', 'copy-external-css', 'jspm', 'copy-assets'], function () {});

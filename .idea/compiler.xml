@@ -2,8 +2,10 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="phuongheh.main" target="1.8" />
-      <module name="phuongheh.test" target="1.8" />
+      <module name="phuongheh.sagan-common.main" target="1.8" />
+      <module name="phuongheh.sagan-common.test" target="1.8" />
+      <module name="phuongheh.sagan-site.main" target="1.8" />
+      <module name="phuongheh.sagan-site.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

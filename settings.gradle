@@ -3,4 +3,6 @@ include 'sagan-client'
 include 'sagan-common'
 include 'sagan-renderer'
 include 'sagan-site'
+include 'sagan-client'
+include 'sagan-renderer'
 
