@@ -1,0 +1,13 @@
+server:
+  port: 8081
+logging:
+  level:
+    ROOT: INFO
+    org.apache.http: WARN
+    allwhite.renderer: INFO
+allwhite:
+  renderer:
+    guides:
+      organization: spring-guides
+      github:
+        token: ${GITHUB_ACCESS_TOKEN:}

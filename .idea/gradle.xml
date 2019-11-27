@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/allwhite-common" />
             <option value="$PROJECT_DIR$/sagan-client" />
             <option value="$PROJECT_DIR$/sagan-common" />
             <option value="$PROJECT_DIR$/sagan-renderer" />
