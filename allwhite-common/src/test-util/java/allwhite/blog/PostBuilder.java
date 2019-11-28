@@ -118,5 +118,17 @@ public class PostBuilder {
         return this;
     }
 
-    public Post
+    public Post build() {
+        Post post = new Post(id, title, rawContent, category, format);
+        post.setAuthor(author);
+        post.setRenderedContent(renderedContent);
+        post.setRenderedSummary(renderedSummary);
+        if (createdAt != null) {
+            post.setCreatedAt(createdAt);
+        }
+        post.setBroadcast(broadcast);
+        post.setDraft(draft);
+        post.setPublishAt(publishAt);
+        return post;
+    }
 }

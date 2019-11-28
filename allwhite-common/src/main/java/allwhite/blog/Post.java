@@ -1,7 +1,9 @@
 package allwhite.blog;
 
 import allwhite.team.MemberProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -76,5 +78,141 @@ public class Post {
     public Post(Long id, String title, String content, PostCategory category, PostFormat format) {
         this(title, content, category, format);
         this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public MemberProfile getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(MemberProfile author) {
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public PostCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(PostCategory category) {
+        this.category = category;
+    }
+
+    public PostFormat getFormat() {
+        return format;
+    }
+
+    public void setFormat(PostFormat format) {
+        this.format = format;
+    }
+
+    public String getRawContent() {
+        return rawContent;
+    }
+
+    public void setRawContent(String rawContent) {
+        this.rawContent = rawContent;
+    }
+
+    public String getRenderedContent() {
+        return renderedContent;
+    }
+
+    public void setRenderedContent(String renderedContent) {
+        this.renderedContent = renderedContent;
+    }
+
+    public String getRenderedSummary() {
+        return renderedSummary;
+    }
+
+    public void setRenderedSummary(String renderedSummary) {
+        this.renderedSummary = renderedSummary;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getPublishAt() {
+        return publishAt;
+    }
+
+    public void setPublishAt(Date publishAt) {
+        this.publishAt = publishAt;
+        publicSlug = publishAt == null ? null : generatePublicSlug();
+    }
+
+    private String generatePublicSlug() {
+        return String.format("%s/%s", SLUG_DATE_FORMAT.format(getPublishAt()), getSlug());
+    }
+
+    public boolean isDraft() {
+        return draft;
+    }
+
+    public void setDraft(boolean draft) {
+        this.draft = draft;
+    }
+
+    public void setBroadcast(boolean broadcast) {
+        this.broadcast = broadcast;
+    }
+
+    public boolean isBroadcast() {
+        return broadcast;
+    }
+
+    @JsonIgnore
+    public boolean isScheduled() {
+        return publishAt == null;
+    }
+
+    @JsonIgnore
+    public boolean isLiveOn(Date date) {
+        return !(isDraft() || publishAt.after(date));
+    }
+
+    public String getPublicSlug() {
+        return publicSlug;
+    }
+
+    public void addPublisSlugAlias(String alias) {
+        if (alias != null) {
+            this.publicSlugAliases.add(alias);
+        }
+    }
+
+    @JsonIgnore
+    public String getAdminSlug() {
+        return String.format("%s-%s", getId(), getSlug());
+    }
+
+    @JsonIgnore
+    private String getSlug() {
+        if (title == null) {
+            return "";
+        }
+        String cleanedTitle = title.toLowerCase().replace("\n", " ").replaceAll("[^a-z\\d\\s]", " ");
+        return StringUtils.arrayToDelimitedString(StringUtils.tokenizeToStringArray(cleanedTitle, " "), "-");
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" + "id=" + id + ", title='" + title + '\'' + '}';
     }
 }
