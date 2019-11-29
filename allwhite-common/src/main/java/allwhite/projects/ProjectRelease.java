@@ -51,7 +51,7 @@ public class ProjectRelease implements Comparable<ProjectRelease> {
 
     public ProjectRelease(String versionName, ReleaseStatus releaseStatus, boolean isCurrent,
                           String refDocUrl, String apiDocUrl, String groupId, String artifactId) {
-        this.versionName = versionName;
+        setVersion(versionName);
         if (releaseStatus != null) {
             this.releaseStatus = releaseStatus;
         }
