@@ -13,6 +13,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,13 +70,34 @@ class AllwhiteQueryBuilders {
         sort(searchSourceBuilder);
         addPagination(pageable, searchSourceBuilder);
         searchSourceBuilder.postFilter(buildFilterFacets(filters));
+
+        return searchSourceBuilder.toString();
     }
 
     private static OrFilterBuilder buildFilterFacets(List<String> filters) {
         OrFilterBuilder outermostFilter = new OrFilterBuilder();
         if (filters != null && !filters.isEmpty()) {
+
             Map<String, List<String>> splitFilters = splitFilters(filters);
+            List<String> projects = splitFilters.get("projects");
+            List<String> apiRef = splitFilters.get("apiRef");
+            List<String> otherFacetPaths = splitFilters.get("others");
+
+            AndFilterBuilder projectApiRefAnded = new AndFilterBuilder();
+            if (apiRef.size() > 0) {
+                projectApiRefAnded.add(new TermsFilterBuilder("facetPaths", apiRef).execution("or"));
+            }
+
+            if (projects.size() > 0) {
+                projectApiRefAnded.add(new TermsFilterBuilder("facetPaths", projects).execution("or"));
+            }
+
+            outermostFilter.add(projectApiRefAnded);
+            if (otherFacetPaths.size() > 0) {
+                outermostFilter.add(new TermsFilterBuilder("facetPaths", otherFacetPaths).execution("or"));
+            }
         }
+        return outermostFilter;
     }
 
     private static Map<String, List<String>> splitFilters(List<String> filters) {
@@ -84,7 +106,7 @@ class AllwhiteQueryBuilders {
         ArrayList<String> others = new ArrayList<>();
         for (String filter : filters) {
             if (filter.startsWith("Projects")) {
-                if (filter.equals("Project/Api") || filter.equals("Projects/Reference")) {
+                if (filter.equals("Projects/Api") || filter.equals("Projects/Reference")) {
                     apiRef.add(filter);
                 } else {
                     projects.add(filter);
@@ -93,6 +115,12 @@ class AllwhiteQueryBuilders {
                 others.add(filter);
             }
         }
+
+        HashMap<String, List<String>> splitFilters = new HashMap<>();
+        splitFilters.put("projects", projects);
+        splitFilters.put("apiRef", apiRef);
+        splitFilters.put("others", others);
+        return splitFilters;
     }
 
     private static void addPagination(PageRequest pageable, SearchSourceBuilder searchSourceBuilder) {
@@ -114,7 +142,7 @@ class AllwhiteQueryBuilders {
     }
 
     private static void addFacetPathsResult(SearchSourceBuilder searchSourceBuilder) {
-        TermsFacetBuilder facetBuilder = new TermsFacetBuilder("facet_paths_results")
+        TermsFacetBuilder facetBuilder = new TermsFacetBuilder("facet_paths_result")
                 .field("facetPaths")
                 .order(TermsFacet.ComparatorType.TERM).size(100000);
         searchSourceBuilder.facet(facetBuilder);

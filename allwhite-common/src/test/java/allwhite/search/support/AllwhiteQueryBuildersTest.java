@@ -1,10 +1,15 @@
 package allwhite.search.support;
 
+import com.google.gson.Gson;
 import io.searchbox.core.Search;
 import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,11 +45,18 @@ public class AllwhiteQueryBuildersTest {
     }
 
     @Test
-    public void fullTextSearch() {
+    public void fullTextSearch() throws IOException {
         String query = "spring boot";
-        List<String> filters = Arrays.asList("Projects/Api", "Project/Reference", "Blog/Engineering", "Projects/Reactor Project/1.1.0.RELEASE");
+        List<String> filters = Arrays.asList("Projects/Api", "Projects/Reference", "Blog/Engineering", "Projects/Reactor Project/1.1.0.RELEASE");
 
 
         Search.Builder builder = AllwhiteQueryBuilders.fullTextSearch(query, new PageRequest(0, 10), filters);
+
+        String expected = StreamUtils.copyToString(
+                new ClassPathResource("/fulltext-query.json", getClass()).getInputStream(),
+                Charset.forName("UTF-8"));
+        String actual = builder.build().getData(new Gson());
+
+        assertThat(actual.replaceAll("[\\s|\\r|\\n]", ""), equalTo(expected.replaceAll("[\\s|\\r|\\n]","")));
     }
 }
