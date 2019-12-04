@@ -1,6 +1,8 @@
 package allwhite.team;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Type;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 
@@ -49,6 +51,9 @@ public class MemberProfile {
     @Column
     private GeoLocation geoLocation;
 
+    @Column(nullable = true)
+    private String twitterUsername;
+
     @Column
     @Type(type = "text")
     private String videoEmbeds;
@@ -59,12 +64,100 @@ public class MemberProfile {
     public MemberProfile() {
     }
 
+    public void setGithubId(Long githubId) {
+        this.githubId = githubId;
+    }
+
+    public Long getGithubId() {
+        return githubId;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setLanyrdUsername(String lanyrdUsername) {
+        this.lanyrdUsername = lanyrdUsername;
+    }
+
+    public String getLanyrdUsername() {
+        return lanyrdUsername;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setGithubUsername(String githubUsername) {
+        this.githubUsername = githubUsername;
+    }
+
+    public String getGithubUsername() {
+        return githubUsername;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public GeoLocation getGeoLocation() {
+        return geoLocation;
+    }
+
+    public void setGeoLocation(GeoLocation geoLocation) {
+        this.geoLocation = geoLocation;
+    }
+
+    public String getVideoEmbeds() {
+        return videoEmbeds;
+    }
+
+    public void setVideoEmbeds(String videoEmbeds) {
+        this.videoEmbeds = videoEmbeds;
+    }
+
+    public String getGravatarEmail() {
+        return gravatarEmail;
+    }
+
+    public void setGravatarEmail(String gravatarEmail) {
+        this.gravatarEmail = gravatarEmail;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setJobTitle(String jobTitle) {
+        this.jobTitle = jobTitle;
+    }
+
+    public String getJobTitle() {
+        return jobTitle;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public void setName(String name) {
@@ -77,5 +170,61 @@ public class MemberProfile {
 
     public String getUsername() {
         return username;
+    }
+
+    @JsonIgnore
+    public String getFullName() {
+        return name == null ? getUsername() : name;
+    }
+
+    public void setTwitterUsername(String twitterUsername) {
+        this.twitterUsername = twitterUsername;
+    }
+
+    public String getTwitterUsername() {
+        return twitterUsername;
+    }
+
+    public void setSpeakerdeckUsername(String speakerdeckUsername) {
+        this.speakerdeckUsername = speakerdeckUsername;
+    }
+
+    public String getSpeakerdeckUsername() {
+        return speakerdeckUsername;
+    }
+
+    @JsonIgnore
+    public Link getTwitterLink() {
+        if (StringUtils.isEmpty(getTwitterUsername())) {
+            return null;
+        }
+        return new Link(String.format("http://twitter.com/%s", getTwitterUsername()), "@" + getTwitterUsername());
+    }
+
+    @JsonIgnore
+    public Link getSpeakerdeckLink() {
+        if (StringUtils.isEmpty(getSpeakerdeckUsername())) {
+            return null;
+        }
+        String pathAndHost = String.format("speakerdeck.com/%s", getSpeakerdeckUsername());
+        return new Link("https://" + pathAndHost, pathAndHost);
+    }
+
+    @JsonIgnore
+    public Link getGithubLink() {
+        if (StringUtils.isEmpty(getGithubUsername())) {
+            return null;
+        }
+        String pathAndHost = String.format("github.com/%s", getGithubUsername());
+        return new Link("https://" + pathAndHost, pathAndHost);
+    }
+
+    @JsonIgnore
+    public Link getLanyrdLink() {
+        if (StringUtils.isEmpty(getLanyrdUsername())) {
+            return null;
+        }
+        String pathAndHost = String.format("lanyrd.com/profile/%s", getLanyrdUsername());
+        return new Link("https://" + pathAndHost, pathAndHost);
     }
 }

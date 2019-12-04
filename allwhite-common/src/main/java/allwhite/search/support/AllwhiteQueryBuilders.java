@@ -10,7 +10,7 @@ import org.elasticsearch.search.facet.terms.TermsFacetBuilder;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +47,7 @@ class AllwhiteQueryBuilders {
         return new StringBuilder().append("{\"query\":\n").append(query).append("\n}").toString();
     }
 
-    static Search.Builder fullTextSearch(String queryTerm, PageRequest pageable, List<String> filters) {
+    static Search.Builder fullTextSearch(String queryTerm, Pageable pageable, List<String> filters) {
         BoolQueryBuilder query = QueryBuilders.boolQuery()
                 .must(matchTitleContentAndAuthor(queryTerm))
                 .should(matchMarkedAsCurrent())
@@ -58,7 +58,7 @@ class AllwhiteQueryBuilders {
         return new Search.Builder(search);
     }
 
-    private static String buildSearch(BoolQueryBuilder query, List<String> filters, PageRequest pageable) {
+    private static String buildSearch(QueryBuilder query, List<String> filters, Pageable pageable) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 
         FilterBuilder filterBuilder = filterUnpublishedResults();
@@ -123,7 +123,7 @@ class AllwhiteQueryBuilders {
         return splitFilters;
     }
 
-    private static void addPagination(PageRequest pageable, SearchSourceBuilder searchSourceBuilder) {
+    private static void addPagination(Pageable pageable, SearchSourceBuilder searchSourceBuilder) {
         searchSourceBuilder.from(pageable.getOffset());
         searchSourceBuilder.size(pageable.getPageSize());
     }
@@ -175,5 +175,12 @@ class AllwhiteQueryBuilders {
                 .multiMatchQuery(queryTerm, BOOSTED_TITLE_FIELD, RAW_CONTENT_FIELD, AUTHOR_FIELD)
                 .fuzziness(Fuzziness.ONE)
                 .minimumShouldMatch("30%");
+    }
+
+    static Search.Builder forEmptyQuery(Pageable pageable, List<String> filters) {
+        QueryBuilder query = QueryBuilders.boolQuery().should(QueryBuilders.matchAllQuery());
+
+        String search = buildSearch(query, filters, pageable);
+        return new Search.Builder(search);
     }
 }
