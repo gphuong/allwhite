@@ -1,6 +1,6 @@
 package allwhite.tools.support;
 
-import allwhite.tool.Download;
+import allwhite.tools.Download;
 import org.junit.Before;
 import org.junit.Test;
 

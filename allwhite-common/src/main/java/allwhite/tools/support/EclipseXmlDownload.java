@@ -1,6 +1,6 @@
 package allwhite.tools.support;
 
-import allwhite.tool.FileDownload;
+import allwhite.tools.FileDownload;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class EclipseXmlDownload implements FileDownload {

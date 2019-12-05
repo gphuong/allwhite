@@ -1,7 +1,6 @@
 package allwhite.tools;
 
-import allwhite.tool.Architecture;
-import allwhite.tool.DownloadLink;
+import allwhite.tools.Architecture;
 import org.junit.Test;
 
 import java.util.Arrays;

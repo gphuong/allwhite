@@ -1,4 +1,4 @@
-package allwhite.tool;
+package allwhite.tools;
 
 import java.util.List;
 import java.util.regex.Matcher;

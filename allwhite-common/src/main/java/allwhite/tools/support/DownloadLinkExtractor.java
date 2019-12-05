@@ -1,7 +1,7 @@
 package allwhite.tools.support;
 
-import allwhite.tool.DownloadLink;
-import allwhite.tool.FileDownload;
+import allwhite.tools.DownloadLink;
+import allwhite.tools.FileDownload;
 
 class DownloadLinkExtractor {
     public DownloadLink createDownloadLink(FileDownload download) {

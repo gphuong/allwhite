@@ -1,4 +1,4 @@
-package allwhite.tool;
+package allwhite.tools;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 

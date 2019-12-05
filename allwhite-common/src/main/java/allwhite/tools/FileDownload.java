@@ -1,4 +1,4 @@
-package allwhite.tool;
+package allwhite.tools;
 
 public interface FileDownload {
     String getBucket();
