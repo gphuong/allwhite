@@ -23,12 +23,20 @@ public class ToolSuiteDownloads {
     public List<ToolSuitePlatform> getPlatformList() {
         ArrayList<ToolSuitePlatform> platformList = new ArrayList<>();
         platformList.add(platforms.get("windows"));
-        platformList.add(platforms.get("windows"));
-        platformList.add(platforms.get("windows"));
+        platformList.add(platforms.get("mac"));
+        platformList.add(platforms.get("linux"));
         return platformList;
     }
 
     public String getWhatsNew() {
         return whatsNew;
+    }
+
+    public List<UpdateSiteArchive> getArchives() {
+        return archives;
+    }
+
+    public String getReleaseName() {
+        return releaseName;
     }
 }

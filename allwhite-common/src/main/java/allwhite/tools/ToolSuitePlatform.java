@@ -2,12 +2,14 @@ package allwhite.tools;
 
 import java.util.List;
 
+import static org.springframework.util.StringUtils.capitalize;
+
 public class ToolSuitePlatform {
     private String name;
     private List<EclipseVersion> eclipseVersions;
 
     public ToolSuitePlatform(String name, List<EclipseVersion> eclipseVersions) {
-        this.name = name;
+        this.name = capitalize(name);
         this.eclipseVersions = eclipseVersions;
     }
 

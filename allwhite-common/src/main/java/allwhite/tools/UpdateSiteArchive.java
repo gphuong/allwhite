@@ -34,4 +34,7 @@ public class UpdateSiteArchive {
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
     }
+    public String getFileName(){
+        return url.substring(url.lastIndexOf("/") + 1);
+    }
 }

@@ -2,6 +2,8 @@ package allwhite.tools.support;
 
 import allwhite.support.Fixtures;
 import allwhite.support.cache.CachedRestClient;
+import allwhite.tools.DownloadLink;
+import allwhite.tools.EclipseVersion;
 import allwhite.tools.ToolSuiteDownloads;
 import allwhite.tools.ToolSuitePlatform;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -52,7 +54,24 @@ public class ToolsServiceTests {
         ToolSuitePlatform windows = platforms.get(0);
         ToolSuitePlatform mac = platforms.get(1);
 
-        assertThat(windows.getN);
+        assertThat(windows.getName(), equalTo("Windows"));
+        assertThat(mac.getName(), equalTo("Mac"));
+        assertThat(platforms.get(2).getName(),equalTo("Linux"));
+
+        List<EclipseVersion> eclipseVersions = windows.getEclipseVersions();
+        assertThat(eclipseVersions.size(),equalTo(1));
+        assertThat(eclipseVersions.get(0).getName(), equalTo("4.4"));
+
+        assertThat(windows.getEclipseVersions().get(0).getArchitectures().get(0).getDownloadLinks().size(), equalTo(1));
+        DownloadLink downloadLink = windows.getEclipseVersions().get(0).getArchitectures().get(0).getDownloadLinks().get(0);
+        assertThat(downloadLink.getUrl(), equalTo("http://download.springsource.com/release/STS/3.6.0/dist/e4.4/spring-tool-suite-3.6.0.RELEASE-e4.4-win32.zip"));
+
+        assertThat(toolSuite.getArchives().size(),equalTo(5));
+        assertThat(toolSuite.getArchives().get(0).getVersion(),equalTo("4.4"));
+        assertThat(toolSuite.getArchives().get(1).getVersion(),equalTo("4.3.2"));
+        assertThat(toolSuite.getArchives().get(2).getVersion(),equalTo("4.2.2"));
+        assertThat(toolSuite.getArchives().get(3).getVersion(),equalTo("3.8.2"));
+        assertThat(toolSuite.getArchives().get(4).getVersion(),equalTo("3.7.2"));
     }
 
 }

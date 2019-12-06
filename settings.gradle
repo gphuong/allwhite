@@ -6,4 +6,5 @@ include 'sagan-site'
 include 'sagan-client'
 include 'sagan-renderer'
 include 'allwhite-common'
+include 'allwhite-site'
 
