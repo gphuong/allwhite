@@ -1,0 +1,70 @@
+package allwhite.support.nav;
+
+import java.util.ArrayList;
+import java.util.List;
+
+class PageElementsBuilder {
+    private final long currentPage;
+    private final long totalPages;
+    private long startPage;
+    private long endPage;
+
+    PageElementsBuilder(long currentPage, long totalPages) {
+        this.currentPage = currentPage;
+        this.totalPages = totalPages;
+    }
+
+    public List<PageElement> build() {
+        ArrayList<PageElement> elements = new ArrayList<>();
+
+        findStartPage();
+        findEndPage();
+
+        if (startPage > 1) {
+            addFirstPage(elements);
+        }
+
+        addPageElements(elements);
+
+        if (endPage < totalPages) {
+            addLastPage(elements);
+        }
+
+        return elements;
+    }
+
+    private void addLastPage(ArrayList<PageElement> elements) {
+        if (endPage < totalPages - 1) {
+            addEllipsis(elements);
+        }
+        elements.add(new PageElement(totalPages, true, false));
+    }
+
+    private void addPageElements(ArrayList<PageElement> elements) {
+        for (long n = startPage; n <= endPage; n++) {
+            boolean isCurrentPage = n == currentPage;
+            boolean isNavigable = !isCurrentPage;
+            elements.add(new PageElement(n, isNavigable, isCurrentPage));
+        }
+    }
+
+    private void addFirstPage(ArrayList<PageElement> elements) {
+        if (endPage < totalPages - 1) {
+            addEllipsis(elements);
+        }
+    }
+
+    private void addEllipsis(ArrayList<PageElement> elements) {
+        elements.add(new PageElement("...", false, false));
+    }
+
+    private void findEndPage() {
+        long previousTwoPages = Math.max((currentPage - 2), 1L);
+        startPage = previousTwoPages;
+    }
+
+    private void findStartPage() {
+        long previousTwoPages = Math.max((currentPage - 2), 1L);
+        startPage = previousTwoPages;
+    }
+}
