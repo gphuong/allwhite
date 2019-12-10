@@ -15,12 +15,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.ExtendedModelMap;
+import org.springframework.validation.BindException;
 import org.springframework.validation.MapBindingResult;
 
 import java.security.Principal;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -28,6 +33,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BlogAdminControllerTests {
@@ -107,6 +114,61 @@ public class BlogAdminControllerTests {
         PostForm postForm = new PostForm();
 
         given(blogService.addPost(eq(postForm), anyString())).willReturn(TEST_POST);
-        controller.createPost
+        controller.createPost(principal, postForm, new BindException(postForm, "postForm"), null);
+        verify(blogService).addPost(postForm, username);
+    }
+
+    @Test
+    public void redirectToEditPostAfterCreation() throws ParseException {
+        String username = "username";
+
+        MemberProfile member = new MemberProfile();
+        member.setUsername(username);
+
+        given(teamRepository.findById(12345L)).willReturn(member);
+
+        PostForm postForm = new PostForm();
+        postForm.setTitle("title");
+        postForm.setContent("content");
+        postForm.setCategory(PostCategory.ENGINEERING);
+        Post post = PostBuilder.post().id(123L).publishAt("2013-05-06 00:00").title("Post Title").build();
+        given(blogService.addPost(postForm, username)).willReturn(post);
+        String result = controller.createPost(principal, postForm, bindingResult, null);
+
+        assertThat(result, equalTo("redirect:/blog/2013/05/06/post-title/edit"));
+    }
+
+    @Test
+    public void attemptingToCreateADuplicatePostReturnsToEditForm() throws ParseException {
+        String username = "username";
+
+        MemberProfile member = new MemberProfile();
+        member.setUsername(username);
+
+        given(teamRepository.findById(12345L)).willReturn(member);
+
+        PostForm postForm = new PostForm();
+        postForm.setTitle("title");
+        postForm.setContent("content");
+        postForm.setCategory(PostCategory.ENGINEERING);
+        Post post = PostBuilder.post().id(123L).publishAt("2013-05-06 00:00").title("Post Title").build();
+
+        given(blogService.addPost(postForm, username)).willThrow(DataIntegrityViolationException.class);
+        String result2 = controller.createPost(principal, postForm, bindingResult, new ExtendedModelMap());
+        assertThat(result2, equalTo("admin/blog/new"));
+    }
+
+    @Test
+    public void reRenderPosts() {
+        int page = 0;
+        int pageSize = 20;
+        Page<Post> posts = new PageImpl<>(
+                Arrays.asList(new Post("published post", "body", PostCategory.ENGINEERING, PostFormat.MARKDOWN),
+                        new Post("another published post", "other body", PostCategory.NEWS_AND_EVENTS, PostFormat.MARKDOWN)),
+                new PageRequest(page, pageSize, Sort.Direction.DESC, "id"), 2);
+        given(blogService.refreshPosts(page, pageSize)).willReturn(posts);
+        String result = controller.refreshBlogPosts(page, pageSize);
+        assertThat(result, equalTo("{page: 0, pageSize: 20, totalPages: 1, totalElements:2}"));
+        verify(blogService, times(1)).refreshPosts(page, pageSize);
     }
 }

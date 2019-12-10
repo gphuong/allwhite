@@ -8,7 +8,9 @@ import allwhite.support.DateFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -73,5 +75,15 @@ public class BlogService {
                 logger.error(e);
             }
         }
+    }
+
+    public Page<Post> refreshPosts(int page, int size) {
+        PageRequest pageRequest = new PageRequest(page, size, Sort.Direction.DESC, "id");
+        Page<Post> posts = postRepository.findAll(pageRequest);
+        for (Post post : posts) {
+            postFormAdapter.refreshPost(post);
+            postRepository.save(post);
+        }
+        return posts;
     }
 }

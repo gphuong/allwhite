@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -73,7 +74,7 @@ public class BlogAdminController {
             try {
                 Post post = service.addPost(postForm, memberProfile.getUsername());
                 PostView postView = PostView.of(post, dateFactory);
-                return "redirect:" + postView.getPath();
+                return "redirect:" + postView.getPath() + "/edit";
             } catch (DataIntegrityViolationException ex) {
                 model.addAttribute("categories", PostCategory.values());
                 model.addAttribute("postForm", postForm);
@@ -82,5 +83,14 @@ public class BlogAdminController {
                 return "admin/blog/new";
             }
         }
+    }
+
+    @RequestMapping(value = "refreshblogposts", method = POST)
+    @ResponseBody
+    public String refreshBlogPosts(@RequestParam(value = "page", defaultValue = "1", required = false) int page,
+                                   @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+        Page<Post> posts = service.refreshPosts(page, size);
+        return String.format("{page: %s, pageSize: %s, totalPages: %s, totalElements:%s}",
+                posts.getNumber(), posts.getSize(), posts.getTotalPages(), posts.getTotalElements());
     }
 }
