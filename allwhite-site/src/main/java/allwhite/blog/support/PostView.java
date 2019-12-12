@@ -46,4 +46,16 @@ public final class PostView {
         }
         return path;
     }
+
+    public Long getId() {
+        return post.getId();
+    }
+
+    public String getFormattedPublishDate() {
+        return post.isScheduled() ? "Unscheduled" : DATE_FORMAT.format(post.getPublishAt());
+    }
+
+    public boolean showReadMore() {
+        return !post.getRenderedContent().equals(post.getRenderedSummary());
+    }
 }

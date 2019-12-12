@@ -99,4 +99,7 @@ public class Project {
         return sampleList;
     }
 
+    public String getName() {
+        return name;
+    }
 }

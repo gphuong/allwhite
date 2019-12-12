@@ -2,16 +2,22 @@ package allwhite.site.blog;
 
 import allwhite.blog.Post;
 import allwhite.blog.PostCategory;
+import allwhite.blog.PostMovedException;
 import allwhite.blog.PostNotFoundException;
 import allwhite.search.support.SearchService;
 import allwhite.support.DateFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Date;
 
 @Service
 public class BlogService {
@@ -23,6 +29,10 @@ public class BlogService {
     private final SearchService searchService;
     private final PostSearchEntryMapper mapper = new PostSearchEntryMapper();
 
+    @Value("${disqus_shortname")
+    private String disqusShortname;
+
+    @Autowired
     public BlogService(PostRepository postRepository, PostFormAdapter postFormAdapter, DateFactory dateFactory,
                        SearchService searchService) {
         this.postRepository = postRepository;
@@ -43,6 +53,19 @@ public class BlogService {
         return postRepository.findByDraftFalseAndPublishAtBeforeOrderByPublishAtDesc(dateFactory.now(), pageRequest);
     }
 
+    public Post getPublishedPost(String publicSlug) {
+        Date now = dateFactory.now();
+        Post post = postRepository.findByPublicSlugAndDraftFalseAndPublishAtBefore(publicSlug, now);
+        if (post == null) {
+            post = postRepository.findByPublicSlugAliasesInAndDraftFalseAndPublishAtBefore(
+                    Collections.singleton(publicSlug), now);
+            if (post != null) {
+                throw new PostMovedException(post.getPublicSlug());
+            }
+            throw new PostNotFoundException(publicSlug);
+        }
+        return post;
+    }
 
     public Page<Post> getPublishedPosts(PostCategory category, Pageable pageRequest) {
         return postRepository.findByCategoryAndDraftFalseAndPublishAtBefore(category, dateFactory.now(), pageRequest);
@@ -85,5 +108,21 @@ public class BlogService {
             postRepository.save(post);
         }
         return posts;
+    }
+
+    public String getDisqusShortname() {
+        return disqusShortname;
+    }
+
+    public Page<Post> getPublishedPostsByDate(int year, Pageable pageRequest) {
+        return postRepository.findByDate(year, pageRequest);
+    }
+
+    public Page<Post> getPublishedPostsByDate(int year, int month, Pageable pageRequest) {
+        return postRepository.findByDate(year, month, pageRequest);
+    }
+
+    public Page<Post> getPublishedPostsByDate(int year, int month, int day, Pageable pageRequest) {
+        return postRepository.findByDate(year, month, day, pageRequest);
     }
 }
