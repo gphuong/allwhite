@@ -1,0 +1,39 @@
+project:
+  artifactId: spring-io
+  name: spring-io
+  description: spring-io
+
+info:
+   build:
+     artifact: ${project.artifactId}
+     name: ${project.name}
+     description: ${project.description}
+   spring:
+     profiles: ${spring.profiles.active:default}
+   app:
+     name: ${vcap.application.name:allwhite}:${vcap.application.instance_index:*}
+     start: ${vcap.application.start:N/A}
+
+spring:
+  main:
+    sources: allwhite.SiteApplication
+  thymeleaf:
+    mode: LEGACYHTML5
+  jpa:
+    hibernate:
+      ddl-auto: none
+security:
+  basic:
+    enabled: false
+  require-ssl: false
+  ignored:
+    - /lib/**
+    - /css/**
+    - /font-custom/**
+    - /img/**
+    - /500
+    - /404
+  headers:
+    hsts: domain
+  user:
+    password: ${ADMIN_PASSWORD:}

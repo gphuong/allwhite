@@ -18,4 +18,12 @@ public class ProjectMetadataService {
     public List<Project> getProjects() {
         return repository.findAll(sortByDisplayOrderAndId);
     }
+
+    public Project save(Project project) {
+        return repository.save(project);
+    }
+
+    public List<Project> getActiveTopLevelProjects() {
+        return repository.findDistinctByCategoryAndParentProjectIsNull("active", sortByDisplayOrderAndId);
+    }
 }

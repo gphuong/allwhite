@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Layout</title>
+    <meta id="Viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1,maximum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/img/favicon.png}"/>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Montserrat:400,700"
+          rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type='text/css' th:href="@{/css/main.css}" />
+
+    <script th:src="@{/jspm_packages/system.js}"></script>
+    <script th:inline="text" th:if="${allwhiteAppVersion}">
+        System.config({baseURL: "/[[${allwhiteAppVersion}]]"});
+    </script>
+    <script th:src="@{/config.js}"></script>
+    <script>
+        System.import('app/main.js')
+    </script>
+
+    <meta name="google-site-verification" content="7qGntFPD9lWAVCtUu5U77v4l68PsTHf6xpzgjQv2j2M" />
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KZM7GF6');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body>
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KZM7GF6"
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <script type="text/javascript">
+        // Work around Google font rendering issues in webkit browsers on Windows 7
+        if (navigator.userAgent.indexOf("NT 6.1") != -1) {
+            document.body.style.WebkitTextStroke = "0.5px";
+        }
+    </script>
+
+</body>
+</html>

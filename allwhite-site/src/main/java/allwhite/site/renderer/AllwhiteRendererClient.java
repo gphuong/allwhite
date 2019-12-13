@@ -2,8 +2,10 @@ package allwhite.site.renderer;
 
 import allwhite.SiteProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.client.Traverson;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Component
@@ -19,7 +22,8 @@ public class AllwhiteRendererClient {
     private final RestTemplate template;
     private final Traverson traverson;
     private static final MediaType TEXT_ASCIIDOC = MediaType.parseMediaType("text/asciidoc");
-
+    private static final ParameterizedTypeReference<Resources<GuideMetadata>> guidesResourceRef = new ParameterizedTypeReference<Resources<GuideMetadata>>() {
+    };
     public AllwhiteRendererClient(RestTemplateBuilder builder, SiteProperties properties) {
         this.template = builder
                 .messageConverters(Traverson.getDefaultMessageConverters(MediaTypes.HAL_JSON))
@@ -46,4 +50,20 @@ public class AllwhiteRendererClient {
     }
 
 
+    public GuideMetadata[] fetchGettingStartedGuides() {
+        return Arrays.stream(fetchAllGuides())
+                .filter(guide -> GuideType.GETTING_STARTED.equals(guide.getType()))
+                .toArray(GuideMetadata[]::new);
+    }
+
+    public GuideMetadata[] fetchAllGuides() {
+        return this.traverson.follow("guides").toObject(guidesResourceRef).getContent()
+                .toArray(new GuideMetadata[]{});
+    }
+
+    public GuideMetadata[] fetchTutorialGuides() {
+        return Arrays.stream(fetchAllGuides())
+                .filter(guide -> GuideType.TUTORIAL.equals(guide.getType()))
+                .toArray(GuideMetadata[]::new);
+    }
 }
