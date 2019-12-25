@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Layout</title>
     <meta id="Viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1,maximum-scale=1, user-scalable=no">
@@ -38,6 +40,100 @@
             document.body.style.WebkitTextStroke = "0.5px";
         }
     </script>
+    <div class="viewport">
+        <header class="navbar header--navbar desktop-only">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <div class="spring-logo--container">
+                        <a class="spring-logo" th:href="@{/}" href="/"><span></span></a>
+                    </div>
+                    <ul class="nav pull-right">
+                        <li th:class="${@uih.navClass(navSection?:'','projects')}">
+                            <a th:href="@{/projects}">Projects</a>
+                        </li>
+                        <li th:class="${@uih.navClass(navSection?:'','guides')}">
+                            <a th:href="@{/guides}">Guides</a>
+                        </li>
+                        <li th:class="${@uih.navClass(navSection?:'','blog')}">
+                            <a th:href="@{/blog}">Blog</a>
+                        </li>
+                        <li th:class="${@uih.navClass(navSection?:'','services')}">
+                            <a th:href="@{/services}">Training & Certification</a>
+                        </li>
+                        <li class="navbar-link nav-search js-nav-search">
+                            <a>
+                                <i class="icon-search navbar-search--icon js-search-input-open"></i>
+                                <span class="search-input-close js-search-input-close">
+                                    <i class="icon-remove"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search-dropdown--container js-search-dropdown">
+                <div class="container-fluid">
+                    <div class="search-form--container">
+                        <form class="form-inline form-search" th:action="@{/search}" action="/search" method="get">
+                            <input type="text" class="search-query search-form--form js-search-input"
+                                   placeholder="Search for documentation, guides, and posts..." name="q" th:value="${searchForm != null ? searchForm.q : ''}"/>
+                            <button type="submit" class="search-form--submit"><i class="icon-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div layout:include="_mobile-nav :: mobile-nav"></div>
+        <div class="header--container" layout:fragment="header-container">
+            <div class="header--content" layout:fragment="header-content">
+                <div class="row-fluid container-fluid">
+                    <div class="span8">
+                        <h1 class="header--content-title" layout:fragment="header">
+                            First Last
+                        </h1>
+                        <p class="header--content-subtitle" layout:fragment=""overview>
+                            Subtitle Ligula Risus Tristique Pharetra
+                        </p>
+                    </div>
+                    <div class="span4">
+                        <div layout:fragment="header-sidebar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" layout:fragment="top-content"></div>
+        <div layout:fragment="full-width--layout"></div>
+        <main layout:fragment="content">
+            <div id="footer-push-down"></div>
+        </main>
 
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="navbar">
+                            <div class="container">
+                                <ul class="nav">
+                                    <li><a th:href="@{/team}">Team</a></li>
+                                    <li><a th:href="@{/tools}">Tools</a></li>
+                                    <li><a href="https://store.pivotal.io/">Store</a></li>
+                                    <li><a th:href="@{/blog}">Newsletter</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        &copy; <span th:text="${#calendars.format(#calendars.createToday(), 'yyyy')}">2013</span><a href="http://www.pivotal.io/">Pivotal Software</a>, Inc. All Rights Reserved.
+                        <a href="https://pivotal.io/terms-of-use">Term of Use</a> &bullet;
+                        <a href="https://pivotal.io/privacy-policy">Privacy</a> &bullet;
+                        <a th:href="@{/trademarks}">Trademark Guidelines</a>
+                        <div id="teconsent" style="display:inline-block;"></div>
+                        <span id="authentication" sec:authorize="isFullyAuthenticated()">
+                            [<a th:href="@{/signout}">Sign out</a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <div id="scrim"></div>
+    </div>
 </body>
 </html>

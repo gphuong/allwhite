@@ -125,4 +125,10 @@ public class BlogService {
     public Page<Post> getPublishedPostsByDate(int year, int month, int day, Pageable pageRequest) {
         return postRepository.findByDate(year, month, day, pageRequest);
     }
+
+    public void updatePost(Post post, PostForm postForm) {
+        postFormAdapter.updatePostFromPostForm(post, postForm);
+        postRepository.save(post);
+        saveToIndex(post);
+    }
 }

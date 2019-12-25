@@ -42,7 +42,8 @@ ext['elasticsearch.version'] = '1.7.1'
 
 dependencies {
     compile project(':allwhite-common')
-    compile project(':sagan-common')
+    compile project(':sagan-client')
+
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-hateoas"
     compile 'com.jayway.jsonpath:json-path'

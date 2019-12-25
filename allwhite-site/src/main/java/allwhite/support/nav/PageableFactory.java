@@ -21,8 +21,11 @@ public abstract class PageableFactory {
         return new PageRequest(page, pageSize, Sort.Direction.DESC, "publishAt");
     }
 
-
     public static Pageable forFeeds() {
         return build(0, 20);
+    }
+
+    public static Pageable forSearch(int page) {
+        return new PageRequest(page - 1, 10);
     }
 }

@@ -11,9 +11,7 @@
             <option value="$PROJECT_DIR$/allwhite-common" />
             <option value="$PROJECT_DIR$/allwhite-site" />
             <option value="$PROJECT_DIR$/sagan-client" />
-            <option value="$PROJECT_DIR$/sagan-common" />
             <option value="$PROJECT_DIR$/sagan-renderer" />
-            <option value="$PROJECT_DIR$/sagan-site" />
           </set>
         </option>
         <option name="useAutoImport" value="true" />

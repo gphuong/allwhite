@@ -201,4 +201,42 @@ public class Project {
     public Set<String> getStackOverflowTagList() {
         return StringUtils.commaDelimitedListToSet(this.stackOverflowTags);
     }
+
+    public String getParentId() {
+        if (parentProject == null) {
+            return null;
+        }
+
+        return parentProject.getId();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+
+        Project project = (Project) obj;
+
+        if (id != null ? !id.equals(project.id) : project.id != null)
+            return false;
+        return true;
+    }
+
+    public Project getParentProject() {
+        return parentProject;
+    }
+
+    public List<Project> getChildProjectList() {
+        return childProjectList;
+    }
+
+    public String getSiteUrl() {
+        return siteUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
 }

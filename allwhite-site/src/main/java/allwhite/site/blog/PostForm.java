@@ -1,5 +1,6 @@
 package allwhite.site.blog;
 
+import allwhite.blog.Post;
 import allwhite.blog.PostCategory;
 import allwhite.blog.PostFormat;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -31,6 +32,16 @@ public class PostForm {
     private Date createdAt;
 
     public PostForm() {
+    }
+
+    public PostForm(Post post) {
+        title = post.getTitle();
+        content = post.getRawContent();
+        category = post.getCategory();
+        broadcast = post.isBroadcast();
+        draft = post.isDraft();
+        publishAt = post.getPublishAt();
+        format = post.getFormat();
     }
 
     public String getTitle() {

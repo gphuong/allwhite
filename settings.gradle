@@ -1,10 +1,5 @@
 rootProject.name = 'phuongheh'
-include 'sagan-client'
-include 'sagan-common'
-include 'sagan-renderer'
-include 'sagan-site'
-include 'sagan-client'
-include 'sagan-renderer'
-include 'allwhite-common'
-include 'allwhite-site'
+rootProject.name = 'sagan'
+
+include 'allwhite-common', 'allwhite-site', 'sagan-client', 'sagan-renderer'
 

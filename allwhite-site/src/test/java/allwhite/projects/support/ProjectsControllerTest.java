@@ -105,7 +105,7 @@ public class ProjectsControllerTest {
         this.mvc.perform(get("/templates/projects/spring-boot"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("selectedProject", this.springBoot))
-                .andExpect(model().attribute("templates/projects", Matchers.contains(this.springBoot, this.springData)))
+                .andExpect(model().attribute("projects", Matchers.contains(this.springBoot, this.springData)))
                 .andExpect(model().attribute("projectStackOverflow", "https://stackoverflow.com/questions/tagged/spring-boot"));
     }
 
@@ -114,7 +114,7 @@ public class ProjectsControllerTest {
         this.mvc.perform(get("/templates/projects/spring-data"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("selectedProject", this.springData))
-                .andExpect(model().attribute("templates/projects", Matchers.contains(this.springBoot, this.springData)))
+                .andExpect(model().attribute("projects", Matchers.contains(this.springBoot, this.springData)))
                 .andExpect(model().attribute("projectStackOverflow", "https://stackoverflow.com/questions/tagged/spring-data+or+spring-data-commons"));
     }
 

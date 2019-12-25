@@ -4,6 +4,7 @@ import allwhite.blog.Post;
 import allwhite.support.DateFactory;
 import allwhite.team.MemberProfile;
 import allwhite.team.support.TeamRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,6 +18,7 @@ class PostFormAdapter {
     private final TeamRepository teamRepository;
     private final DateFactory dateFactory;
 
+    @Autowired
     public PostFormAdapter(PostContentRenderer renderer, PostSummary postSummary,
                            DateFactory dateFactory, TeamRepository teamRepository) {
         this.renderer = renderer;
@@ -39,8 +41,20 @@ class PostFormAdapter {
     private void setPostProperties(PostForm postForm, String content, Post post) {
         String rendered = null;
         rendered = renderer.render(content, post.getFormat());
+        post.setRenderedContent(rendered);
+        summarize(post);
+        post.setBroadcast(postForm.isBroadcast());
+        post.setDraft(postForm.isDraft());
+        post.setPublishAt(publishDate(postForm));
     }
 
+    private Date publishDate(PostForm postForm) {
+        if (!postForm.isDraft() && postForm.getPublishAt() == null) {
+            return dateFactory.now();
+        } else {
+            return postForm.getPublishAt();
+        }
+    }
     private Date createdDate(PostForm postForm, Date defaultDate) {
         Date createdAt = postForm.getCreatedAt();
         if (createdAt == null) {
@@ -56,6 +70,19 @@ class PostFormAdapter {
 
     private void summarize(Post post) {
         String summary = postSummary.forContent(post.getRenderedContent(), SUMMARY_LENGTH);
-        post.setRenderedContent(summary);
+        post.setRenderedSummary(summary);
+    }
+
+    public void updatePostFromPostForm(Post post, PostForm postForm) {
+        String content = postForm.getContent();
+
+        post.addPublisSlugAlias(post.getPublicSlug());
+        post.setTitle(postForm.getTitle());
+        post.setRawContent(content);
+        post.setCategory(postForm.getCategory());
+        post.setFormat(postForm.getFormat());
+        post.setCreatedAt(createdDate(postForm, post.getCreatedAt()));
+
+        setPostProperties(postForm, content, post);
     }
 }
