@@ -68,7 +68,7 @@ class PostFormAdapter {
         summarize(post);
     }
 
-    private void summarize(Post post) {
+    public void summarize(Post post) {
         String summary = postSummary.forContent(post.getRenderedContent(), SUMMARY_LENGTH);
         post.setRenderedSummary(summary);
     }

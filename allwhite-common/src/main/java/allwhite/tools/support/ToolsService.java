@@ -1,6 +1,7 @@
 package allwhite.tools.support;
 
 import allwhite.support.cache.CachedRestClient;
+import allwhite.tools.EclipseDownloads;
 import allwhite.tools.ToolSuiteDownloads;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,13 @@ public class ToolsService {
         String responseXml = restClient.get(restTemplate, "http://dist.springsource.com/release/STS/index-new.xml", String.class);
         ToolSuiteXml toolSuiteXml = serializer.readValue(responseXml, ToolSuiteXml.class);
         return toolXmlConverter.convert(toolSuiteXml, toolSuiteName, shortName);
+    }
+
+    public EclipseDownloads getEclipseDownloads() throws IOException {
+        String responseXml =
+                restClient.get(restTemplate, "http://dist.springsource.com/release/STS/eclipse.xml", String.class);
+        EclipseXml eclipseXml = serializer.readValue(responseXml, EclipseXml.class);
+        return new EclipseDownloadsXmlConverter().convert(eclipseXml);
+
     }
 }

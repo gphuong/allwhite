@@ -49,7 +49,8 @@ class PageElementsBuilder {
     }
 
     private void addFirstPage(ArrayList<PageElement> elements) {
-        if (endPage < totalPages - 1) {
+        elements.add(new PageElement(1, true, false));
+        if (startPage > 2) {
             addEllipsis(elements);
         }
     }
@@ -59,8 +60,9 @@ class PageElementsBuilder {
     }
 
     private void findEndPage() {
-        long previousTwoPages = Math.max((currentPage - 2), 1L);
-        startPage = previousTwoPages;
+        long nextThreePages = currentPage + 3;
+        long desiredLastPage = Math.max(6, nextThreePages);
+        endPage = Math.min(desiredLastPage, totalPages);
     }
 
     private void findStartPage() {

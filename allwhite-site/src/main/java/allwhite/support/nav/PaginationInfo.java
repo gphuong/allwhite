@@ -6,11 +6,11 @@ import java.util.List;
 
 public class PaginationInfo {
     private final long currentPage;
-    private final long totalPage;
+    private final long totalPages;
 
     public PaginationInfo(Page<?> page) {
         currentPage = page.getNumber() + 1;
-        totalPage = page.getTotalPages();
+        totalPages = page.getTotalPages();
     }
 
     public boolean isPreviousVisible() {
@@ -18,7 +18,7 @@ public class PaginationInfo {
     }
 
     public boolean isNextVisible() {
-        return currentPage < totalPage;
+        return currentPage < totalPages;
     }
 
     public long getNextPageNumber() {
@@ -30,6 +30,34 @@ public class PaginationInfo {
     }
 
     public List<PageElement> getPageElements(){
-        return  new PageElementsBuilder(currentPage, totalPage).build();
+        return new PageElementsBuilder(currentPage, totalPages).build();
+    }
+
+    public boolean isVisible() {
+        return isPreviousVisible() || isNextVisible();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        PaginationInfo that = (PaginationInfo) o;
+
+        if (currentPage != that.currentPage)
+            return false;
+        if (totalPages != that.totalPages)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (currentPage ^ (currentPage >>> 32));
+        result = 31 * result + (int) (totalPages ^ (totalPages >>> 32));
+        return result;
     }
 }

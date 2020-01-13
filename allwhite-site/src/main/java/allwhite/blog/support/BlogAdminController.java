@@ -63,6 +63,13 @@ public class BlogAdminController {
         return "admin/blog/show";
     }
 
+    @RequestMapping(value = "/new", method = {GET, HEAD})
+    public String newPost(Model model) {
+        model.addAttribute("postForm", new PostForm());
+        model.addAttribute("categories", PostCategory.values());
+        model.addAttribute("formats", PostFormat.values());
+        return "admin/blog/new";
+    }
     @RequestMapping(value = "", method = {POST})
     public String createPost(Principal principal, @Valid PostForm postForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
@@ -85,6 +92,26 @@ public class BlogAdminController {
         }
     }
 
+    @RequestMapping(value = "resummarize", method = POST)
+    public String resummarizeAllBlogPosts() {
+        service.resummarizeAllPosts();
+        return "redirect:/admin/blog";
+    }
+
+    @RequestMapping(value = "/{postId:[0-9]+}{slug:.*}/edit", method = {GET, HEAD})
+    public String editPost(@PathVariable Long postId, @PathVariable String slug, Model model) {
+        Post post = service.getPost(postId);
+        PostForm postForm = new PostForm(post);
+        String path = PostView.of(post, dateFactory).getPath();
+
+        model.addAttribute("categories", PostCategory.values());
+        model.addAttribute("formats", PostFormat.values());
+        model.addAttribute("postForm", postForm);
+        model.addAttribute("post", post);
+        model.addAttribute("path", path);
+        return "admin/blog/edit";
+
+    }
     @RequestMapping(value = "refreshblogposts", method = POST)
     @ResponseBody
     public String refreshBlogPosts(@RequestParam(value = "page", defaultValue = "1", required = false) int page,

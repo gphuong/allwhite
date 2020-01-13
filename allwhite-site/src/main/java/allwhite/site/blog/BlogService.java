@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BlogService {
@@ -130,5 +131,13 @@ public class BlogService {
         postFormAdapter.updatePostFromPostForm(post, postForm);
         postRepository.save(post);
         saveToIndex(post);
+    }
+
+    public void resummarizeAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        for (Post post : posts) {
+            postFormAdapter.summarize(post);
+            postRepository.save(post);
+        }
     }
 }

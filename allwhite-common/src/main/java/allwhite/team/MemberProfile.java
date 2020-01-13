@@ -64,6 +64,9 @@ public class MemberProfile {
     public MemberProfile() {
     }
 
+    MemberProfile(Long id) {
+        this.id = id;
+    }
     public void setGithubId(Long githubId) {
         this.githubId = githubId;
     }
@@ -185,6 +188,9 @@ public class MemberProfile {
         return twitterUsername;
     }
 
+    public boolean hasTwitterUsername() {
+        return !StringUtils.isEmpty(twitterUsername);
+    }
     public void setSpeakerdeckUsername(String speakerdeckUsername) {
         this.speakerdeckUsername = speakerdeckUsername;
     }
@@ -227,4 +233,11 @@ public class MemberProfile {
         String pathAndHost = String.format("lanyrd.com/profile/%s", getLanyrdUsername());
         return new Link("https://" + pathAndHost, pathAndHost);
     }
+
+    public TeamLocation getTeamLocation() {
+        if (geoLocation == null)
+            return null;
+        return new TeamLocation(name, geoLocation.getLatitude(), geoLocation.getLongitude(), getId());
+    }
+
 }

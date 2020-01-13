@@ -9,6 +9,8 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+
 @Service
 public class TeamService {
     private static Log logger = LogFactory.getLog(TeamService.class);
@@ -87,5 +89,17 @@ public class TeamService {
         profile.setGithubUsername(username);
         updateAvatarUrlwithGravatar(profile);
         return teamRepository.save(profile);
+    }
+
+    public List<MemberProfile> fetchActiveMembers() {
+        return teamRepository.findByHiddenOrderByNameAsc(false);
+    }
+
+    public void showOnlyTeamMembersWithIds(List<Long> userIds) {
+        teamRepository.hideTeamMembersNotInIds(userIds);
+    }
+
+    public List<MemberProfile> fetchHiddenMembers() {
+        return teamRepository.findByHiddenOrderByNameAsc(true);
     }
 }

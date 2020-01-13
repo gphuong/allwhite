@@ -36,6 +36,18 @@ abstract class MvcConfig extends WebMvcConfigurerAdapter {
             }
         }
 
+        public String blogClass(String active, String current) {
+            if (active.equals(current)) {
+                return "blog-category active";
+            } else {
+                return "blog-category";
+            }
+        }
+
+        public String path() {
+            return urlPathHelper.getPathWithinApplication(request);
+        }
+
     }
 
 

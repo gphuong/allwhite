@@ -2,11 +2,13 @@ package allwhite.blog.support;
 
 import allwhite.blog.Post;
 import allwhite.support.DateFactory;
+import allwhite.team.MemberProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,6 +57,17 @@ public final class PostView {
         return post.isScheduled() ? "Unscheduled" : DATE_FORMAT.format(post.getPublishAt());
     }
 
+    public MemberProfile getAuthor() {
+        return post.getAuthor();
+    }
+
+    public String getRenderedSummary() {
+        return post.getRenderedSummary();
+    }
+
+    public Date getPublishAt() {
+        return post.getPublishAt();
+    }
     public boolean showReadMore() {
         return !post.getRenderedContent().equals(post.getRenderedSummary());
     }

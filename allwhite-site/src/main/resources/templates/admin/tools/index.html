@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<head>
+    <title>Admin &middot; Spring Tools</title>
+</head>
+<body>
+<div layout:fragment="header-container"></div>
+<div layout:fragment="content" class="container">
+    <div class="main-body--wrapper">
+        <div class="admin-index--title">
+            <div class="content--title search-title">
+                <a th:href="@{/admin}">Admin</a> : Spring Tools
+            </div>
+        </div>
+
+        <div class="admin-index--title">
+            <a th:href="@{/admin/tools/new}" href="edit.html">Add Platform</a>
+        </div>
+
+        <div class="row">
+            <div id="content" class="span12">
+                <h2>Platforms</h2>
+                <table class="table">
+                    <tr th:each="platform: ${platforms}">
+                        <td th:text="${platform.id}">eclipse</td>
+                        <td>
+                            <a th:href="@{'/admin/tools/' + ${platform.id}}" action="/admin/tool/init" method="post"
+                               class="form-inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <input type="hidden" name="_method" value="delete">
+                                <input type="submit" class="btn" value="Delete"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div id="sidebar" class="span4">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
